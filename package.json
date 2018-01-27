@@ -1,0 +1,25 @@
+{
+  "name": "1x-game",
+  "version": "0.1.0",
+  "description": "Global Game Jam - \"1X\" the game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/buckeye132/1X-game.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/buckeye132/1X-game/issues"
+  },
+  "homepage": "https://github.com/buckeye132/1X-game#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "phaser": "^2.6.2",
+    "socket.io": "^2.0.4",
+    "uuid": "^3.2.1"
+  }
+}
