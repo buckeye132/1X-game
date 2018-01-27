@@ -53,8 +53,8 @@ io.on('connection',function(socket) {
   });
 });
 
-// update at 30 Hz
+// update at 10 Hz
 setInterval(function() {
   // broadcast
   io.sockets.emit("all_players", playerMap);
-}, 1000 / 30);
+}, 100);

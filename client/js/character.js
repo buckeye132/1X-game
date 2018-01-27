@@ -1,5 +1,7 @@
 var SPEED = 200;
 var JUMP_FORCE = 400;
+var SERVER_UPDATE_TIC = 100; // 30 Hz
+var SMOOTH_FACTOR = 3;
 
 function Character(id, game) {
   this.id = id;
@@ -7,10 +9,11 @@ function Character(id, game) {
 }
 
 /* SETUP AND TEARDOWN */
-Character.prototype.initializeSprite = function(x, y) {
-  this.sprite = this.game.add.sprite(100, 96, 'simple_character');
+Character.prototype.initializeSprite = function(x, y, withGravity) {
+  this.sprite = this.game.add.sprite(x, y, 'simple_character');
   game.physics.enable( [ this.sprite ], Phaser.Physics.ARCADE);
   this.sprite.body.collideWorldBounds = true;
+  this.sprite.body.allowGravity = withGravity
 }
 
 Character.prototype.destroySprite = function() {
@@ -55,6 +58,15 @@ Character.prototype.jump = function() {
 
 /* SERVER MOVEMENT INPUT */
 Character.prototype.moveTo = function(x, y) {
-  this.sprite.x = x;
-  this.sprite.y = y;
+  if (this.tween) {
+    this.tween.stop();
+    delete this.tween;
+  }
+
+  var targetX = ((x - this.x()) * SMOOTH_FACTOR) + this.x();
+  var targetY = ((y - this.y()) * SMOOTH_FACTOR) + this.y();
+
+  this.tween = this.game.add.tween(this.sprite);
+  this.tween.to({x: targetX, y: targetY}, SERVER_UPDATE_TIC * SMOOTH_FACTOR);
+  this.tween.start();
 }

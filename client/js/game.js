@@ -84,11 +84,14 @@ GameState.updateAllPlayers = function(playerMap) {
     if (!GameState.remotePlayers[id]) {
       // we don't know about this player yet, initialize it
       GameState.remotePlayers[id] = new Character(id, game);
-      GameState.remotePlayers[id].initializeSprite();
+      GameState.remotePlayers[id].initializeSprite(
+        playerMap[id].x,
+        playerMap[id].y,
+        false);
+    } else {
+      // update player position
+      GameState.remotePlayers[id].moveTo(playerMap[id].x, playerMap[id].y);
     }
-
-    // update player position
-    GameState.remotePlayers[id].moveTo(playerMap[id].x, playerMap[id].y);
   });
 
   // remove any players that are no longer in the game
@@ -105,7 +108,7 @@ setupPlayerCharacter = function(id) {
   if (!GameState.playerId) {
     GameState.playerId = id;
     GameState.player = new Character(id, game);
-    GameState.player.initializeSprite();
+    GameState.player.initializeSprite(100, 100, true);
   } else {
     console.log("Duplicate setup player request");
   }
