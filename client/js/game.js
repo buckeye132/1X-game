@@ -8,6 +8,7 @@ GameState.init = function() {
 
 GameState.preload = function() {
   game.load.image('simple_character', 'assets/sprites/simple_character.png');
+  game.load.spritesheet('dino_sprite', 'assets/sprites/DinoSprites - vita.png', 24, 24, 24);
 };
 
 GameState.create = function() {

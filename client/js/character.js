@@ -10,10 +10,23 @@ function Character(id, game) {
 
 /* SETUP AND TEARDOWN */
 Character.prototype.initializeSprite = function(x, y, withGravity) {
-  this.sprite = this.game.add.sprite(x, y, 'simple_character');
+  this.sprite = this.game.add.sprite(x, y, 'dino_sprite');
   game.physics.enable( [ this.sprite ], Phaser.Physics.ARCADE);
   this.sprite.body.collideWorldBounds = true;
-  this.sprite.body.allowGravity = withGravity
+  this.sprite.anchor.setTo(0.5, 0.5);
+  this.sprite.body.allowGravity = withGravity;
+
+  this.sprite.animations.add('walk',[3,4,5,6,7]);
+  this.sprite.animations.add('stand',[0]);
+  this.sprite.animations.add('jump',[7]);
+  this.sprite.animations.add('hurt',[14,15,16]);
+  this.sprite.animations.add('shoot',[17,18,17]);
+
+
+
+  this.sprite.scale.x = 2;
+  this.sprite.scale.y = 2;
+
 }
 
 Character.prototype.destroySprite = function() {
@@ -40,19 +53,25 @@ Character.prototype.isFalling = function() {
 /* KEYBOARD MOVEMENT INPUT */
 Character.prototype.moveLeft = function() {
   this.sprite.body.velocity.x = -SPEED;
+  this.sprite.animations.play('walk', 15, true);
+  this.sprite.scale.x = -2;
 }
 
 Character.prototype.moveRight = function() {
   this.sprite.body.velocity.x = SPEED;
+  this.sprite.animations.play('walk', 15, true);
+  this.sprite.scale.x = 2;
 }
 
 Character.prototype.stopMove = function() {
   this.sprite.body.velocity.x = 0;
+  this.sprite.animations.play('stand', 15, true);
 }
 
 Character.prototype.jump = function() {
   if (!this.isFalling()) {
     this.sprite.body.velocity.y = -JUMP_FORCE;
+    this.sprite.animations.play('jump', 15, true);
   }
 }
 
