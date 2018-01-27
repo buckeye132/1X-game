@@ -1,0 +1,44 @@
+body{
+  background-color: black;
+
+}
+
+.jumbotron{
+  text-align: center;
+  font-family: monospace;
+  padding: 0px;
+  margin-top: 15px;
+  color: lightgrey;
+  background-color: black;
+}
+
+#menu{
+  background-color: #2b2b29;
+  width: 77%;
+  height: 450px;
+  border: 2px dashed white;
+  float: right;
+  color: lightgrey;
+}
+#join{
+  background-color: #2b2b29;
+  width: 20%;
+  height: 450px;
+  border: 2px dashed white;
+  float: left;
+  color: darkgrey;
+}
+
+.btn{
+  width: 200px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.dropInGame{
+  background-color: #2b2b29;
+}
+
+#instructions{
+font-weight: lighter;
+}
