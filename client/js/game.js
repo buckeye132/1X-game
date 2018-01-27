@@ -26,6 +26,9 @@ GameState.create = function() {
 
   // create a map of other players
   GameState.remotePlayers = {};
+
+  // register with server
+  Client.requestId();
 };
 
 GameState.update = function() {
@@ -67,18 +70,33 @@ GameState.registerPlayerId = function(id) {
 };
 
 GameState.updateAllPlayers = function(playerMap) {
+  if (!GameState.playerId) return;
+
   // remove the local player
   delete playerMap[GameState.playerId];
 
   // update position of players based on data from server
   Object.keys(playerMap).forEach(function(id) {
+    // ignore players that haven't reported a position yet
+    if (!playerMap[id].hasReported) return;
+
+    // check if we're tracking this player
     if (!GameState.remotePlayers[id]) {
       // we don't know about this player yet, initialize it
       GameState.remotePlayers[id] = new Character(id, game);
       GameState.remotePlayers[id].initializeSprite();
     }
 
+    // update player position
     GameState.remotePlayers[id].moveTo(playerMap[id].x, playerMap[id].y);
+  });
+
+  // remove any players that are no longer in the game
+  Object.keys(GameState.remotePlayers).forEach(function(id) {
+    if (!playerMap[id]) {
+      GameState.remotePlayers[id].destroySprite();
+      delete GameState.remotePlayers[id];
+    }
   });
 };
 

@@ -29,13 +29,11 @@ io.on('connection',function(socket) {
     id: uuid(),
     x: 0,
     y: 0,
+    hasReported: false,
   };
   playerMap[socket.player.id] = socket.player;
   console.log("Player Joined: " + socket.player.id);
   console.log("Player Count: " + Object.keys(playerMap).length);
-
-  // give the client its ID
-  socket.emit('id', {id: socket.player.id});
 
   socket.on('disconnect',function(){
     console.log("Player Left: " + socket.player.id);
@@ -43,7 +41,13 @@ io.on('connection',function(socket) {
     console.log("Player Count: " + Object.keys(playerMap).length);
   });
 
+  socket.on('get_id', function() {
+    // give the client its ID
+    socket.emit('id', {id: socket.player.id});
+  });
+
   socket.on('move', function(data) {
+    socket.player.hasReported = true;
     socket.player.x = data.x;
     socket.player.y = data.y;
   });

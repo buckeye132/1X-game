@@ -2,8 +2,8 @@ var Client = {};
 Client.socket = io.connect();
 
 /* Outbound */
-Client.registerPlayer = function(input) {
-  Client.socket.emit('input', input);
+Client.requestId = function() {
+  Client.socket.emit('get_id');
 };
 
 Client.sendPosition = function(character) {

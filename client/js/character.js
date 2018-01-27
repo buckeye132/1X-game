@@ -6,10 +6,15 @@ function Character(id, game) {
   this.game = game;
 }
 
+/* SETUP AND TEARDOWN */
 Character.prototype.initializeSprite = function(x, y) {
   this.sprite = this.game.add.sprite(100, 96, 'simple_character');
   game.physics.enable( [ this.sprite ], Phaser.Physics.ARCADE);
   this.sprite.body.collideWorldBounds = true;
+}
+
+Character.prototype.destroySprite = function() {
+  this.sprite.destroy();
 }
 
 /* GETTERS */
