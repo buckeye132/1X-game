@@ -1,3 +1,5 @@
+var ALLOW_CONTROL_IN_AIR = false;
+
 var GameState = {};
 
 GameState.init = function() {
@@ -14,11 +16,6 @@ GameState.create = function() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
   game.physics.arcade.gravity.y = 800;
 
-  // setup character
-  GameState.playerSprite = game.add.sprite(100, 96, 'simple_character');
-  game.physics.enable( [ GameState.playerSprite ], Phaser.Physics.ARCADE);
-  GameState.playerSprite.body.collideWorldBounds = true;
-
   // keyboard input
   game.input.keyboard.addKeyCapture(Phaser.KeyCode.SPACEBAR);
   GameState.inputKeys = {
@@ -26,30 +23,72 @@ GameState.create = function() {
     right: game.input.keyboard.addKey(Phaser.KeyCode.D),
     jump: game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR),
   };
+
+  // create a map of other players
+  GameState.remotePlayers = {};
 };
 
 GameState.update = function() {
-  // left / right input
-  if (GameState.playerSprite.body.velocity.y == 0) {
+  // short circuit if we're not registered yet
+  if (!GameState.playerId) return;
+
+  //  movement input
+  if (!GameState.player.isFalling() || ALLOW_CONTROL_IN_AIR) {
     if (GameState.inputKeys.left.isDown && !GameState.inputKeys.right.isDown) {
-      GameState.playerSprite.body.velocity.x = -200;
-      Client.sendInput('left');
+      GameState.player.moveLeft();
     } else if (!GameState.inputKeys.left.isDown && GameState.inputKeys.right.isDown) {
-      GameState.playerSprite.body.velocity.x = 200;
-      Client.sendInput('right');
+      GameState.player.moveRight();
     } else {
-      GameState.playerSprite.body.velocity.x = 0;
-      Client.sendInput('stop');
+      GameState.player.stopMove();
     }
   }
 
-  // jump input
-  if (GameState.inputKeys.jump.isDown && GameState.playerSprite.body.velocity.y == 0) {
-    GameState.playerSprite.body.velocity.y = -400;
-    Client.sendInput('jump');
+  if (!GameState.player.isFalling()) {
+    if(GameState.inputKeys.jump.isDown) {
+      GameState.player.jump();
+    }
   }
+
+  // send position to server
+  Client.sendPosition(GameState.player);
 };
 
 GameState.render = function() {
-  game.debug.text('Player At: ' + GameState.playerSprite.x + " " + GameState.playerSprite.y, 50, 50);
+  if (!GameState.playerId) {
+    game.debug.text('Waiting for server.');
+  } else {
+    game.debug.text('Pos: ' + GameState.player.x() + " " + GameState.player.y(), 50, 50);
+    game.debug.text('ID: ' + GameState.playerId, 50, 75);
+  }
 };
+
+GameState.registerPlayerId = function(id) {
+  setupPlayerCharacter(id);
+};
+
+GameState.updateAllPlayers = function(playerMap) {
+  // remove the local player
+  delete playerMap[GameState.playerId];
+
+  // update position of players based on data from server
+  Object.keys(playerMap).forEach(function(id) {
+    if (!GameState.remotePlayers[id]) {
+      // we don't know about this player yet, initialize it
+      GameState.remotePlayers[id] = new Character(id, game);
+      GameState.remotePlayers[id].initializeSprite();
+    }
+
+    GameState.remotePlayers[id].moveTo(playerMap[id].x, playerMap[id].y);
+  });
+};
+
+/* Private Helpers */
+setupPlayerCharacter = function(id) {
+  if (!GameState.playerId) {
+    GameState.playerId = id;
+    GameState.player = new Character(id, game);
+    GameState.player.initializeSprite();
+  } else {
+    console.log("Duplicate setup player request");
+  }
+}

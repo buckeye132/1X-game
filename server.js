@@ -21,17 +21,36 @@ console.log("Server Started.");
 /*
  * Game Server
  */
+var playerMap = {};
+
 io.on('connection',function(socket) {
+  // initialze player with UUID
   socket.player = {
-    id: uuid()
+    id: uuid(),
+    x: 0,
+    y: 0,
   };
+  playerMap[socket.player.id] = socket.player;
   console.log("Player Joined: " + socket.player.id);
+  console.log("Player Count: " + Object.keys(playerMap).length);
+
+  // give the client its ID
+  socket.emit('id', {id: socket.player.id});
 
   socket.on('disconnect',function(){
     console.log("Player Left: " + socket.player.id);
+    delete playerMap[socket.player.id];
+    console.log("Player Count: " + Object.keys(playerMap).length);
   });
 
-  socket.on('input', function(input) {
-    console.log("Player " + socket.player.id + " : input - " + input);
+  socket.on('move', function(data) {
+    socket.player.x = data.x;
+    socket.player.y = data.y;
   });
 });
+
+// update at 30 Hz
+setInterval(function() {
+  // broadcast
+  io.sockets.emit("all_players", playerMap);
+}, 1000 / 30);
