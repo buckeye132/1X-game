@@ -17,7 +17,10 @@ GameState.preload = function() {
   game.load.spritesheet('dino_sprite2', 'assets/sprites/DinoSprites - mort.png', 24, 18, 28);
   game.load.spritesheet('dino_sprite3', 'assets/sprites/DinoSprites - doux.png', 24, 18, 28);
 
-  game.load.image('fireball', 'assets/sprites/fireball.png')
+  game.load.image('fireball_dino0', 'assets/sprites/fireball_doux.png')
+  game.load.image('fireball_dino1', 'assets/sprites/fireball_mort.png')
+  game.load.image('fireball_dino2', 'assets/sprites/fireball_tard.png')
+  game.load.image('fireball_dino3', 'assets/sprites/fireball_vita.png')
 };
 
 GameState.create = function() {
@@ -160,31 +163,31 @@ SetupPlatforms = function(){
   GameState.platforms.push(platform);
 
   var platform = new Platform(game);
-  platform.initializeSprite(550, 100, 5, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  platform.initializeSprite(550, 100, 5, 1);
   GameState.platforms.push(platform);
 
   var platform = new Platform(game);
-  platform.initializeSprite(300, 175, 6, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  platform.initializeSprite(300, 175, 6, 1);
   GameState.platforms.push(platform);
 
   var platform = new Platform(game);
-  platform.initializeSprite(175, 275, 4, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  platform.initializeSprite(175, 275, 4, 1);
   GameState.platforms.push(platform);
 
   var platform = new Platform(game);
-  platform.initializeSprite(500, 275, 4, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  platform.initializeSprite(500, 275, 4, 1);
   GameState.platforms.push(platform);
 
   var platform = new Platform(game);
-  platform.initializeSprite(0, 350, 3, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  platform.initializeSprite(0, 350, 3, 1);
   GameState.platforms.push(platform);
 
   var platform = new Platform(game);
-  platform.initializeSprite(700, 350, 3, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  platform.initializeSprite(700, 350, 3, 1);
   GameState.platforms.push(platform);
 
   var platform = new Platform(game);
-  platform.initializeSprite(300, 475, 6, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  platform.initializeSprite(300, 475, 6, 1);
   GameState.platforms.push(platform);
 
 
