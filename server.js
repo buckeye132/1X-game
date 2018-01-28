@@ -59,6 +59,14 @@ io.on('connection',function(socket) {
     socket.player.animation = data.animation,
     socket.player.scaleX = data.scaleX
   });
+
+  socket.on('report_projectile', function(data) {
+    io.sockets.emit('new_projectile', data);
+  });
+
+  socket.on('report_projectile_hit', function(data) {
+    io.sockets.emit('destroy_projectile', data);
+  });
 });
 
 // update at 10 Hz

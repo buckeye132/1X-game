@@ -15,10 +15,19 @@ Client.sendPosition = function(character) {
      });
 };
 
-Client.shootProjectile = function(x, y, direction) {
+Client.shootProjectile = function(id, x, y, direction, spriteIndex) {
   Client.socket.emit('report_projectile',
     {
+      id: id,
+      x: x,
+      y: y,
+      direction: direction,
+      spriteIndex: spriteIndex
     });
+}
+
+Client.projectileHit = function(id) {
+  Client.socket.emit('report_projectile_hit', {id: id});
 }
 
 /* Inbound */
@@ -32,5 +41,9 @@ Client.socket.on('all_players', function(data) {
 });
 
 Client.socket.on('new_projectile', function(data) {
+  GameState.spawnProjectile(data.id, data.x, data.y, data.direction, data.spriteIndex);
+});
 
+Client.socket.on('destroy_projectile', function(data) {
+  GameState.destroyProjectile(data.id, false);
 });

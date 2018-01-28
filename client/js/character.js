@@ -3,16 +3,21 @@ var JUMP_FORCE = 850;
 var SERVER_UPDATE_TIC = 100; // 30 Hz
 var SMOOTH_FACTOR = 3;
 var ATTACK_COOLDOWN = 650;
+var DAMAGE_PENALTY = 1500;
 
 function Character(id, game) {
   this.id = id;
   this.game = game;
   this.lastAttackTime = 0;
   this.lockAnimation = false;
+  this.lockInput = false;
+  this.projectileIndex = 0;
+  this.lastHitTime = 0;
 }
 
 /* SETUP AND TEARDOWN */
 Character.prototype.initializeSprite = function(x, y, withGravity, spriteIndex) {
+  this.spriteIndex = spriteIndex;
   this.sprite = this.game.add.sprite(x, y, 'dino_sprite' + spriteIndex);
   game.physics.enable( [ this.sprite ], Phaser.Physics.ARCADE);
   this.sprite.body.collideWorldBounds = true;
@@ -52,12 +57,16 @@ Character.prototype.isFalling = function() {
 
 /* KEYBOARD MOVEMENT INPUT */
 Character.prototype.moveLeft = function() {
+  if(this.lockInput) return;
+
   this.sprite.body.velocity.x = -SPEED;
   this.playAnimation('walk');
   this.sprite.scale.x = -2;
 }
 
 Character.prototype.moveRight = function() {
+  if(this.lockInput) return;
+
   this.sprite.body.velocity.x = SPEED;
   this.playAnimation('walk');
   this.sprite.scale.x = 2;
@@ -68,34 +77,12 @@ Character.prototype.stopMove = function() {
   this.playAnimation('stand');
 }
 
-Character.prototype.attack = function() {
-  var currentTime = new Date().getTime();
-  if ((currentTime - this.lastAttackTime) >= ATTACK_COOLDOWN) {
-    this.lastAttackTime = currentTime;
-    this.playAnimation('attack');
-
-    this.lockAnimation = true;
-    setTimeout(function(self) {
-      self.lockAnimation = false;
-    }, 150, this);
-  }
-}
-
-Character.prototype.damage = function() {
-  this.playAnimation('damage');
-}
-
 Character.prototype.jump = function() {
+  if(this.lockInput) return;
+
   if (!this.isFalling()) {
     this.sprite.body.velocity.y = -JUMP_FORCE;
     this.playAnimation('jump');
-  }
-}
-
-Character.prototype.playAnimation = function(name) {
-  if (!this.lockAnimation) {
-    this.currentAnimation = name;
-    this.sprite.animations.play(name, 15, true);
   }
 }
 
@@ -115,4 +102,45 @@ Character.prototype.moveTo = function(x, y, animation, scaleX) {
 
   this.playAnimation(animation);
   this.sprite.scale.x = scaleX;
+}
+
+/* Combat */
+Character.prototype.attack = function() {
+  var currentTime = new Date().getTime();
+  if ((currentTime - this.lastAttackTime) >= ATTACK_COOLDOWN) {
+    this.lastAttackTime = currentTime;
+    Client.shootProjectile(
+      this.id + ":" + this.projectileIndex++,
+      this.x(),
+      this.y(),
+      this.sprite.scale.x / 2,
+      this.spriteIndex);
+
+    this.playAnimation('attack', true);
+    this.lockAnimation = true;
+    setTimeout(function(self) {
+      self.lockAnimation = false;
+    }, 150, this);
+  }
+}
+
+Character.prototype.damage = function() {
+  this.playAnimation('damage', true);
+  this.lockAnimation = true;
+  setTimeout(function(self) {
+    self.lockAnimation = false;
+  }, 150, this);
+
+  this.lockInput = true;
+  setTimeout(function(self) {
+    self.lockInput = false;
+  }, DAMAGE_PENALTY, this);
+}
+
+/* MISC */
+Character.prototype.playAnimation = function(name, force = false) {
+  if (!this.lockAnimation) {
+    this.currentAnimation = name;
+    this.sprite.animations.play(name, 15, true);
+  }
 }

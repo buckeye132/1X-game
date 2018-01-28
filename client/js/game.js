@@ -17,10 +17,10 @@ GameState.preload = function() {
   game.load.spritesheet('dino_sprite2', 'assets/sprites/DinoSprites - mort.png', 24, 18, 28);
   game.load.spritesheet('dino_sprite3', 'assets/sprites/DinoSprites - doux.png', 24, 18, 28);
 
-  game.load.image('fireball_dino0', 'assets/sprites/fireball_doux.png')
-  game.load.image('fireball_dino1', 'assets/sprites/fireball_mort.png')
-  game.load.image('fireball_dino2', 'assets/sprites/fireball_tard.png')
-  game.load.image('fireball_dino3', 'assets/sprites/fireball_vita.png')
+  game.load.image('fireball_dino0', 'assets/sprites/fireball_vita.png')
+  game.load.image('fireball_dino1', 'assets/sprites/fireball_tard.png')
+  game.load.image('fireball_dino2', 'assets/sprites/fireball_mort.png')
+  game.load.image('fireball_dino3', 'assets/sprites/fireball_doux.png')
 };
 
 GameState.create = function() {
@@ -46,6 +46,9 @@ GameState.create = function() {
   // create a map of other players
   GameState.remotePlayers = {};
 
+  // create a map of projectiles
+  GameState.projectiles = {};
+
   // register with server
   Client.requestId();
 };
@@ -59,6 +62,18 @@ GameState.update = function() {
     platform.sprites.forEach(function(platformSprite) {
       game.physics.arcade.collide(GameState.player.sprite, platformSprite);
     });
+  });
+
+  // check for projectile hits
+  Object.keys(GameState.projectiles).forEach(function(projectileId) {
+      var projectile = GameState.projectiles[projectileId];
+      if(!projectile.id.startsWith(GameState.playerId) &&
+        game.physics.arcade.overlap(GameState.player.sprite, projectile.sprite)) {
+        // hit
+        console.log('hit');
+        GameState.player.damage();
+        GameState.destroyProjectile(projectile.id, true);
+      }
   });
 
   //  movement input
@@ -141,6 +156,23 @@ GameState.updateAllPlayers = function(playerMap) {
     }
   });
 };
+
+GameState.spawnProjectile = function(id, x, y, direction, spriteIndex) {
+  var projectile = new Projectile(id);
+  projectile.initializeSprite(x, y, direction, spriteIndex);
+  GameState.projectiles[id] = projectile;
+}
+
+GameState.destroyProjectile = function(id, shouldReport) {
+  if (GameState.projectiles[id]) {
+    GameState.projectiles[id].destroy();
+    delete GameState.projectiles[id];
+  }
+
+  if (shouldReport) {
+    Client.projectileHit(id);
+  }
+}
 
 /* Private Helpers */
 setupPlayerCharacter = function(id, spriteIndex) {
