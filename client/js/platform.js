@@ -8,6 +8,8 @@ function Platform(game) {
 Platform.prototype.initializeSprite = function(x, y, w, h) {
   this.sprites = [];
 
+  var relY = WORLD_HEIGHT - (TILE_HEIGHT * h) - y;
+
   for (var row = 0; row < h; row++) {
     for (var col = 0; col < w; col++) {
       var offset = 3;
@@ -20,7 +22,7 @@ Platform.prototype.initializeSprite = function(x, y, w, h) {
       else if (col == w-1) frame = 2 + offset;
 
       var posX = x + (col*TILE_WIDTH);
-      var posY = y + (row*TILE_HEIGHT)
+      var posY = relY + (row*TILE_HEIGHT)
 
       this.sprites.push(createSprite(this.game, posX, posY, 'platform_sprite', frame));
     }

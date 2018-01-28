@@ -12,10 +12,10 @@ GameState.preload = function() {
   game.load.image('simple_character', 'assets/sprites/simple_character.png');
   game.load.spritesheet('platform_sprite', 'assets/sprites/platform_tilesheet.png', 32, 32);
 
-  game.load.spritesheet('dino_sprite0', 'assets/sprites/DinoSprites - vita.png', 24, 24, 24);
-  game.load.spritesheet('dino_sprite1', 'assets/sprites/DinoSprites - tard.png', 24, 24, 24);
-  game.load.spritesheet('dino_sprite2', 'assets/sprites/DinoSprites - mort.png', 24, 24, 24);
-  game.load.spritesheet('dino_sprite3', 'assets/sprites/DinoSprites - doux.png', 24, 24, 24);
+  game.load.spritesheet('dino_sprite0', 'assets/sprites/DinoSprites - vita.png', 24, 18, 28);
+  game.load.spritesheet('dino_sprite1', 'assets/sprites/DinoSprites - tard.png', 24, 18, 28);
+  game.load.spritesheet('dino_sprite2', 'assets/sprites/DinoSprites - mort.png', 24, 18, 28);
+  game.load.spritesheet('dino_sprite3', 'assets/sprites/DinoSprites - doux.png', 24, 18, 28);
 
   game.load.image('fireball', 'assets/sprites/fireball.png')
 };
@@ -25,7 +25,7 @@ GameState.create = function() {
   game.world.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
   game.stage.backgroundColor = '#cccccc';
   game.physics.startSystem(Phaser.Physics.ARCADE);
-  game.physics.arcade.gravity.y = 800;
+  game.physics.arcade.gravity.y = 2250;
 
   // keyboard input
   game.input.keyboard.addKeyCapture(Phaser.KeyCode.SPACEBAR);
@@ -38,11 +38,7 @@ GameState.create = function() {
   };
 
   // setup platforms
-  GameState.platforms = [];
-
-  var platform = new Platform(game);
-  platform.initializeSprite(300, WORLD_HEIGHT - 200, 3, 1);
-  GameState.platforms.push(platform);
+  SetupPlatforms();
 
   // create a map of other players
   GameState.remotePlayers = {};
@@ -154,4 +150,42 @@ setupPlayerCharacter = function(id, spriteIndex) {
   } else {
     console.log("Duplicate setup player request");
   }
+}
+
+SetupPlatforms = function(){
+  GameState.platforms = [];
+
+  var platform = new Platform(game);
+  platform.initializeSprite(75, 100, 5, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(550, 100, 5, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(300, 175, 6, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(175, 275, 4, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(500, 275, 4, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(0, 350, 3, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(700, 350, 3, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(300, 475, 6, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  GameState.platforms.push(platform);
+
+
 }

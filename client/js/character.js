@@ -1,8 +1,8 @@
-var SPEED = 200;
-var JUMP_FORCE = 600;
+var SPEED = 400;
+var JUMP_FORCE = 850;
 var SERVER_UPDATE_TIC = 100; // 30 Hz
 var SMOOTH_FACTOR = 3;
-var ATTACK_COOLDOWN = 1000;
+var ATTACK_COOLDOWN = 650;
 
 function Character(id, game) {
   this.id = id;
@@ -23,7 +23,7 @@ Character.prototype.initializeSprite = function(x, y, withGravity, spriteIndex) 
   this.sprite.animations.add('stand',[0]);
   this.sprite.animations.add('jump',[7]);
   this.sprite.animations.add('damage',[14,15,16]);
-  this.sprite.animations.add('attack',[17,18,17]);
+  this.sprite.animations.add('attack',[24,25,26,27]);
 
   this.sprite.scale.x = 2;
   this.sprite.scale.y = 2;
