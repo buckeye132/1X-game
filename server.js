@@ -1,3 +1,5 @@
+var SPRITE_COUNT = 4;
+
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
@@ -22,6 +24,7 @@ console.log("Server Started.");
  * Game Server
  */
 var playerMap = {};
+var currentSpriteIndex = 0;
 
 io.on('connection',function(socket) {
   // initialze player with UUID
@@ -30,7 +33,9 @@ io.on('connection',function(socket) {
     x: 0,
     y: 0,
     hasReported: false,
+    spriteIndex: getNextSpriteIndex()
   };
+
   playerMap[socket.player.id] = socket.player;
   console.log("Player Joined: " + socket.player.id);
   console.log("Player Count: " + Object.keys(playerMap).length);
@@ -43,13 +48,16 @@ io.on('connection',function(socket) {
 
   socket.on('get_id', function() {
     // give the client its ID
-    socket.emit('id', {id: socket.player.id});
+    socket.emit('id',
+      {id: socket.player.id, spriteIndex: socket.player.spriteIndex});
   });
 
   socket.on('move', function(data) {
     socket.player.hasReported = true;
-    socket.player.x = data.x;
-    socket.player.y = data.y;
+    socket.player.x = data.position.x;
+    socket.player.y = data.position.y;
+    socket.player.animation = data.animation,
+    socket.player.scaleX = data.scaleX
   });
 });
 
@@ -58,3 +66,9 @@ setInterval(function() {
   // broadcast
   io.sockets.emit("all_players", playerMap);
 }, 100);
+
+getNextSpriteIndex = function() {
+  var spriteIndex = currentSpriteIndex++;
+  currentSpriteIndex = currentSpriteIndex % SPRITE_COUNT;
+  return spriteIndex;
+}

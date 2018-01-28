@@ -31,6 +31,8 @@ createSprite = function(game, x, y, key, frame) {
   var sprite = game.add.sprite(x, y, key, frame);
   game.physics.enable( [ sprite ], Phaser.Physics.ARCADE);
   sprite.body.checkCollision.down = false;
+  sprite.body.checkCollision.left = false;
+  sprite.body.checkCollision.right = false;
   sprite.body.immovable = true;
   sprite.body.allowGravity = false;
   return sprite;

@@ -2,15 +2,18 @@ var SPEED = 200;
 var JUMP_FORCE = 600;
 var SERVER_UPDATE_TIC = 100; // 30 Hz
 var SMOOTH_FACTOR = 3;
+var ATTACK_COOLDOWN = 1000;
 
 function Character(id, game) {
   this.id = id;
   this.game = game;
+  this.lastAttackTime = 0;
+  this.lockAnimation = false;
 }
 
 /* SETUP AND TEARDOWN */
-Character.prototype.initializeSprite = function(x, y, withGravity) {
-  this.sprite = this.game.add.sprite(x, y, 'dino_sprite');
+Character.prototype.initializeSprite = function(x, y, withGravity, spriteIndex) {
+  this.sprite = this.game.add.sprite(x, y, 'dino_sprite' + spriteIndex);
   game.physics.enable( [ this.sprite ], Phaser.Physics.ARCADE);
   this.sprite.body.collideWorldBounds = true;
   this.sprite.anchor.setTo(0.5, 0.5);
@@ -24,7 +27,6 @@ Character.prototype.initializeSprite = function(x, y, withGravity) {
 
   this.sprite.scale.x = 2;
   this.sprite.scale.y = 2;
-
 }
 
 Character.prototype.destroySprite = function() {
@@ -51,40 +53,54 @@ Character.prototype.isFalling = function() {
 /* KEYBOARD MOVEMENT INPUT */
 Character.prototype.moveLeft = function() {
   this.sprite.body.velocity.x = -SPEED;
-  this.sprite.animations.play('walk', 15, true);
+  this.playAnimation('walk');
   this.sprite.scale.x = -2;
 }
 
 Character.prototype.moveRight = function() {
   this.sprite.body.velocity.x = SPEED;
-  this.sprite.animations.play('walk', 15, true);
+  this.playAnimation('walk');
   this.sprite.scale.x = 2;
 }
 
 Character.prototype.stopMove = function() {
   this.sprite.body.velocity.x = 0;
-  this.sprite.animations.play('stand', 15, true);
+  this.playAnimation('stand');
 }
 
 Character.prototype.attack = function() {
-  this.sprite.body.velocity.x = 0;
-  this.sprite.animations.play('attack', 15, true);
+  var currentTime = new Date().getTime();
+  if ((currentTime - this.lastAttackTime) >= ATTACK_COOLDOWN) {
+    this.lastAttackTime = currentTime;
+    this.playAnimation('attack');
+
+    this.lockAnimation = true;
+    setTimeout(function(self) {
+      self.lockAnimation = false;
+    }, 150, this);
+  }
 }
 
 Character.prototype.damage = function() {
-  this.sprite.body.velocity.x = 0;
-  this.sprite.animations.play('damage', 15, true);
+  this.playAnimation('damage');
 }
 
 Character.prototype.jump = function() {
   if (!this.isFalling()) {
     this.sprite.body.velocity.y = -JUMP_FORCE;
-    this.sprite.animations.play('jump', 15, true);
+    this.playAnimation('jump');
+  }
+}
+
+Character.prototype.playAnimation = function(name) {
+  if (!this.lockAnimation) {
+    this.currentAnimation = name;
+    this.sprite.animations.play(name, 15, true);
   }
 }
 
 /* SERVER MOVEMENT INPUT */
-Character.prototype.moveTo = function(x, y) {
+Character.prototype.moveTo = function(x, y, animation, scaleX) {
   if (this.tween) {
     this.tween.stop();
     delete this.tween;
@@ -96,4 +112,7 @@ Character.prototype.moveTo = function(x, y) {
   this.tween = this.game.add.tween(this.sprite);
   this.tween.to({x: targetX, y: targetY}, SERVER_UPDATE_TIC * SMOOTH_FACTOR);
   this.tween.start();
+
+  this.playAnimation(animation);
+  this.sprite.scale.x = scaleX;
 }

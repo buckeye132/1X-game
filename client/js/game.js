@@ -11,7 +11,13 @@ GameState.init = function() {
 GameState.preload = function() {
   game.load.image('simple_character', 'assets/sprites/simple_character.png');
   game.load.spritesheet('platform_sprite', 'assets/sprites/platform_tilesheet.png', 32, 32);
-  game.load.spritesheet('dino_sprite', 'assets/sprites/DinoSprites - vita.png', 24, 24, 24);
+
+  game.load.spritesheet('dino_sprite0', 'assets/sprites/DinoSprites - vita.png', 24, 24, 24);
+  game.load.spritesheet('dino_sprite1', 'assets/sprites/DinoSprites - tard.png', 24, 24, 24);
+  game.load.spritesheet('dino_sprite2', 'assets/sprites/DinoSprites - mort.png', 24, 24, 24);
+  game.load.spritesheet('dino_sprite3', 'assets/sprites/DinoSprites - doux.png', 24, 24, 24);
+
+  game.load.image('fireball', 'assets/sprites/fireball.png')
 };
 
 GameState.create = function() {
@@ -35,7 +41,7 @@ GameState.create = function() {
   GameState.platforms = [];
 
   var platform = new Platform(game);
-  platform.initializeSprite(300, 450, 3, 3);
+  platform.initializeSprite(300, WORLD_HEIGHT - 200, 3, 1);
   GameState.platforms.push(platform);
 
   // create a map of other players
@@ -67,11 +73,11 @@ GameState.update = function() {
     }
   }
 
-  if (!GameState.inputKeys.left.isDown && GameState.inputKeys.attack.isDown) {
+  if (GameState.inputKeys.attack.isDown) {
     GameState.player.attack();
   }
 
-  if (!GameState.inputKeys.left.isDown && GameState.inputKeys.damage.isDown) {
+  if (GameState.inputKeys.damage.isDown) {
     GameState.player.damage();
   }
 
@@ -94,8 +100,8 @@ GameState.render = function() {
   }
 };
 
-GameState.registerPlayerId = function(id) {
-  setupPlayerCharacter(id);
+GameState.registerPlayerId = function(id, spriteIndex) {
+  setupPlayerCharacter(id, spriteIndex);
 };
 
 GameState.updateAllPlayers = function(playerMap) {
@@ -116,10 +122,15 @@ GameState.updateAllPlayers = function(playerMap) {
       GameState.remotePlayers[id].initializeSprite(
         playerMap[id].x,
         playerMap[id].y,
-        false);
+        false,
+        playerMap[id].spriteIndex);
     } else {
       // update player position
-      GameState.remotePlayers[id].moveTo(playerMap[id].x, playerMap[id].y);
+      GameState.remotePlayers[id].moveTo(
+        playerMap[id].x,
+        playerMap[id].y,
+        playerMap[id].animation,
+        playerMap[id].scaleX);
     }
   });
 
@@ -133,11 +144,11 @@ GameState.updateAllPlayers = function(playerMap) {
 };
 
 /* Private Helpers */
-setupPlayerCharacter = function(id) {
+setupPlayerCharacter = function(id, spriteIndex) {
   if (!GameState.playerId) {
     GameState.playerId = id;
     GameState.player = new Character(id, game);
-    GameState.player.initializeSprite(100, 100, true);
+    GameState.player.initializeSprite(Math.random()*WORLD_WIDTH, WORLD_HEIGHT - 48, true, spriteIndex);
 
     game.camera.follow(GameState.player.sprite, Phaser.Camera.FOLLOW_PLATFORMER);
   } else {
