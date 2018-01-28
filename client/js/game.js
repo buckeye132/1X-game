@@ -1,5 +1,5 @@
 var ALLOW_CONTROL_IN_AIR = true;
-var WORLD_WIDTH = 800
+var WORLD_WIDTH = 1000
 var WORLD_HEIGHT = 5000;
 
 var GameState = {};
@@ -27,6 +27,8 @@ GameState.preload = function() {
 
 GameState.create = function() {
   // setup world
+  var background = game.add.tileSprite(0,0,1000,5000,'background');
+
   game.world.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
   game.stage.backgroundColor = '#cccccc';
   game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -192,37 +194,292 @@ setupPlayerCharacter = function(id, spriteIndex) {
 SetupPlatforms = function(){
   GameState.platforms = [];
 
+//---------------------------------------------------------------------------------//
+
   var platform = new Platform(game);
-  platform.initializeSprite(75, 100, 5, 1); //x pos, y pos, w & h of platform - Starts at world top left
+  platform.initializeSprite(175, 100, 5, 1); //x pos, y pos, w & h of platform - Starts at world top left
   GameState.platforms.push(platform);
 
   var platform = new Platform(game);
-  platform.initializeSprite(550, 100, 5, 1);
+  platform.initializeSprite(650, 100, 5, 1);
   GameState.platforms.push(platform);
 
   var platform = new Platform(game);
-  platform.initializeSprite(300, 175, 6, 1);
+  platform.initializeSprite(400, 200, 6, 1);
   GameState.platforms.push(platform);
 
   var platform = new Platform(game);
-  platform.initializeSprite(175, 275, 4, 1);
+  platform.initializeSprite(275, 300, 4, 1);
   GameState.platforms.push(platform);
 
   var platform = new Platform(game);
-  platform.initializeSprite(500, 275, 4, 1);
+  platform.initializeSprite(600, 300, 4, 1);
   GameState.platforms.push(platform);
 
   var platform = new Platform(game);
-  platform.initializeSprite(0, 350, 3, 1);
+  platform.initializeSprite(105, 400, 3, 1);
   GameState.platforms.push(platform);
 
   var platform = new Platform(game);
-  platform.initializeSprite(700, 350, 3, 1);
+  platform.initializeSprite(805, 400, 3, 1);
   GameState.platforms.push(platform);
 
   var platform = new Platform(game);
-  platform.initializeSprite(300, 475, 6, 1);
+  platform.initializeSprite(400, 520, 6, 1);
   GameState.platforms.push(platform);
 
+//---------------------------------------------------------------------------------//
+
+  var platform = new Platform(game);
+  platform.initializeSprite(175, 600, 5, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(650, 600, 5, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 700, 6, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(275, 800, 4, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(600, 800, 4, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(105, 900, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(805, 900, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 1020, 6, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(175, 1100, 5, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(650, 1100, 5, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 1200, 6, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(275, 1300, 4, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(600, 1300, 4, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(105, 1400, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(805, 1400, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 1520, 6, 1);
+  GameState.platforms.push(platform);
+
+//------------ Beginning of the tower ------------------//
+
+  var platform = new Platform(game);
+  platform.initializeSprite(175, 1600, 5, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(650, 1600, 5, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 1700, 6, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(275, 1800, 4, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(600, 1800, 4, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 2020, 6, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(305, 1900, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(605, 1900, 3, 1);
+  GameState.platforms.push(platform);
+
+  //--------//
+
+ platform = new Platform(game);
+  platform.initializeSprite(175, 2100, 5, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(650, 2100, 5, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 2200, 6, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(275, 2300, 4, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(600, 2300, 4, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(305, 2400, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(605, 2400, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 2520, 6, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(175, 2600, 5, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(650, 2600, 5, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 2700, 6, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(275, 2800, 4, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(600, 2800, 4, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(305, 2900, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(605, 2900, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 3020, 6, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(175, 3100, 5, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(650, 3100, 5, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 3200, 6, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(275, 3300, 4, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(600, 3300, 4, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(305, 3400, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(605, 3400, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 3520, 6, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(350, 3600, 2, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(600, 3600, 2, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 3700, 6, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(275, 3800, 4, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(600, 3800, 4, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(350, 3900, 2, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(600, 3900, 2, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 4020, 6, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(350, 4150, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(550, 4150, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 4275, 6, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(105, 4325, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(805, 4325, 3, 1);
+  GameState.platforms.push(platform);
+
+  var platform = new Platform(game);
+  platform.initializeSprite(400, 4446, 6, 1);
+  GameState.platforms.push(platform);
 
 }

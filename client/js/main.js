@@ -1,5 +1,5 @@
 var game = new Phaser.Game(
-  800, 600,
+  1000, 600,
   Phaser.AUTO,
   document.getElementById('game'));
 
