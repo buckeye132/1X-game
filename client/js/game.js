@@ -21,6 +21,8 @@ GameState.preload = function() {
   game.load.image('fireball_dino1', 'assets/sprites/fireball_tard.png')
   game.load.image('fireball_dino2', 'assets/sprites/fireball_mort.png')
   game.load.image('fireball_dino3', 'assets/sprites/fireball_doux.png')
+
+  game.load.image('background', 'assets/sprites/background.png')
 };
 
 GameState.create = function() {
