@@ -1,4 +1,6 @@
-var ALLOW_CONTROL_IN_AIR = false;
+var ALLOW_CONTROL_IN_AIR = true;
+var WORLD_WIDTH = 800
+var WORLD_HEIGHT = 5000;
 
 var GameState = {};
 
@@ -8,12 +10,14 @@ GameState.init = function() {
 
 GameState.preload = function() {
   game.load.image('simple_character', 'assets/sprites/simple_character.png');
+  game.load.spritesheet('platform_sprite', 'assets/sprites/platform_tilesheet.png', 32, 32);
   game.load.spritesheet('dino_sprite', 'assets/sprites/DinoSprites - vita.png', 24, 24, 24);
 };
 
 GameState.create = function() {
   // setup world
-  game.stage.backgroundColor = '#000000';
+  game.world.setBounds(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
+  game.stage.backgroundColor = '#cccccc';
   game.physics.startSystem(Phaser.Physics.ARCADE);
   game.physics.arcade.gravity.y = 800;
 
@@ -27,6 +31,13 @@ GameState.create = function() {
     jump: game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR),
   };
 
+  // setup platforms
+  GameState.platforms = [];
+
+  var platform = new Platform(game);
+  platform.initializeSprite(300, 450, 3, 3);
+  GameState.platforms.push(platform);
+
   // create a map of other players
   GameState.remotePlayers = {};
 
@@ -37,6 +48,13 @@ GameState.create = function() {
 GameState.update = function() {
   // short circuit if we're not registered yet
   if (!GameState.playerId) return;
+
+  // perform collisions with platforms
+  GameState.platforms.forEach(function(platform) {
+    platform.sprites.forEach(function(platformSprite) {
+      game.physics.arcade.collide(GameState.player.sprite, platformSprite);
+    });
+  });
 
   //  movement input
   if (!GameState.player.isFalling() || ALLOW_CONTROL_IN_AIR) {
@@ -120,6 +138,8 @@ setupPlayerCharacter = function(id) {
     GameState.playerId = id;
     GameState.player = new Character(id, game);
     GameState.player.initializeSprite(100, 100, true);
+
+    game.camera.follow(GameState.player.sprite, Phaser.Camera.FOLLOW_PLATFORMER);
   } else {
     console.log("Duplicate setup player request");
   }

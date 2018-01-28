@@ -1,5 +1,5 @@
 var SPEED = 200;
-var JUMP_FORCE = 400;
+var JUMP_FORCE = 600;
 var SERVER_UPDATE_TIC = 100; // 30 Hz
 var SMOOTH_FACTOR = 3;
 
