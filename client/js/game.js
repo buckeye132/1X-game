@@ -22,6 +22,8 @@ GameState.create = function() {
   GameState.inputKeys = {
     left: game.input.keyboard.addKey(Phaser.KeyCode.A),
     right: game.input.keyboard.addKey(Phaser.KeyCode.D),
+    attack: game.input.keyboard.addKey(Phaser.KeyCode.E),
+    damage: game.input.keyboard.addKey(Phaser.KeyCode.Q),
     jump: game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR),
   };
 
@@ -45,6 +47,14 @@ GameState.update = function() {
     } else {
       GameState.player.stopMove();
     }
+  }
+
+  if (!GameState.inputKeys.left.isDown && GameState.inputKeys.attack.isDown) {
+    GameState.player.attack();
+  }
+
+  if (!GameState.inputKeys.left.isDown && GameState.inputKeys.damage.isDown) {
+    GameState.player.damage();
   }
 
   if (!GameState.player.isFalling()) {

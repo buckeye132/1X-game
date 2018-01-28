@@ -19,10 +19,8 @@ Character.prototype.initializeSprite = function(x, y, withGravity) {
   this.sprite.animations.add('walk',[3,4,5,6,7]);
   this.sprite.animations.add('stand',[0]);
   this.sprite.animations.add('jump',[7]);
-  this.sprite.animations.add('hurt',[14,15,16]);
-  this.sprite.animations.add('shoot',[17,18,17]);
-
-
+  this.sprite.animations.add('damage',[14,15,16]);
+  this.sprite.animations.add('attack',[17,18,17]);
 
   this.sprite.scale.x = 2;
   this.sprite.scale.y = 2;
@@ -66,6 +64,16 @@ Character.prototype.moveRight = function() {
 Character.prototype.stopMove = function() {
   this.sprite.body.velocity.x = 0;
   this.sprite.animations.play('stand', 15, true);
+}
+
+Character.prototype.attack = function() {
+  this.sprite.body.velocity.x = 0;
+  this.sprite.animations.play('attack', 15, true);
+}
+
+Character.prototype.damage = function() {
+  this.sprite.body.velocity.x = 0;
+  this.sprite.animations.play('damage', 15, true);
 }
 
 Character.prototype.jump = function() {
